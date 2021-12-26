@@ -1,0 +1,139 @@
+#compdef _bartr bartr
+
+function _bartr(){
+  local line state
+
+  _arguments -C \
+    '--help[Display help and usage]' \
+    '--version[Display version info]' \
+    '1: :->cmds' \
+    '*::arg:->args'
+
+  case $state in
+    cmds)
+      _values \
+        "bartr commands" \
+        "app[App commands]" \
+        "ls[List the apps]" \
+        "new[Create a new app]"
+    ;;
+
+    args)
+      case $line[1] in
+        app)
+          _app
+        ;;
+        new)
+          _new
+        ;;
+        ls)
+          _arguments \
+            '--help[Display help and usage]'
+        ;;
+      esac
+    ;;
+  esac
+}
+
+function _app(){
+  local line state
+
+  _arguments \
+    '--help[Display help and usage]' \
+    '1: :->cmds' \
+    '*::arg:->args'
+
+  case $state in
+    cmds)
+      _values \
+        'application commands' \
+        'create[Create a new app]' \
+        'info[Get application info]' \
+        'set[Set application values]'
+    ;;
+
+    args)
+    case $line[1] in
+      create)
+        _arguments \
+        '--help[Display help and usage]' \
+        '--app-name=[Application name]' \
+        '--namespace=[Kubernetes namespace]' \
+        '--image=[Image name]' \
+        '--cpu-limit=[CPU Limit (default: 250m)]' \
+        '--memory-limit=[Memory Limit (default: 256Mi)]' \
+        '--cpu-request=[CPU Request (default: 250m)]' \
+        '--memory-request=[Memory Request (default: 256Mi)]' \
+        '--args=[Application arguments]' \
+        '--readiness-probe=[Readiness Probe path (default: /healthz)]' \
+        '--liveness-probe=[Liveness Probe path (default: /healthz)]' \
+        '--port=[Port app exposes (default: 8080)]' \
+        '--node-port=[NodePort for app (default: 30080)]' \
+        '--force[Force overwriting config]'
+      ;;
+
+      set)
+        _values \
+          'key to set' \
+          'AppName[Application name]' \
+          'Namespace[Kubernetes namespace]' \
+          'Args[Application arguments]' \
+          'Image[Docker image:tag]' \
+          'Port[Service Port]' \
+          'NodePort[Node Port]' \
+          'CpuLimit[CPU Limit]' \
+          'CpuRequest[Requested CPU]' \
+          'MemoryLimit[Memory Limit]' \
+          'MemoryRequest[Requested Memor]' \
+          'LivenessProbe[Liveness probe (default /healthz)]' \
+          'ReadinessProbe[Readiness probe (default /readyz)]'
+      ;;
+
+      info)
+        _arguments \
+          '--help[Display help and usage]'
+      ;;
+    esac
+    ;;
+  esac
+}
+
+function _new(){
+  local line state
+
+  _arguments \
+    '--help[Display help and usage]' \
+    '1: :->cmds' \
+    '*::arg:->args'
+
+  case $state in
+    cmds)
+      _values \
+        'select framework' \
+        'dotnet[New dotnet app]' \
+        'spring[New SpringBoot app]' \
+        'ts[New TypeScript app]' \
+    ;;
+
+    args)
+      case $line[2] in
+        daemon|webapi)
+          _arguments \
+            '--help[Display help and usage]' \
+          '1::(new)'
+        ;;
+
+        *)
+          case $line[1] in
+            dotnet|spring|ts)
+            _values \
+              'select app type' \
+              'webapi[New WebAPI app]' \
+              'daemon[New daemon app]'
+          ;;
+          esac
+        ;;
+      esac
+    ;;
+  esac
+}
