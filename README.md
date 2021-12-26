@@ -18,25 +18,28 @@ Notes
 
 ```bash
 
+# these may already be set
 unsetopt complete_aliases
 autoload -U compinit
-    
-chmod -R go-w .
-alias b=bartr
+
+# set permissions to avoid compaudit errors    
+chmod -R go-w ..
+
+# add current folder to fpath
 export fpath=($(pwd) $fpath)
 compinit
 
+# this will show any file perm issues
 compaudit
 
-compaudit | xargs chown -R "$(whoami)"
+# this will reset any file perm issues
 compaudit | xargs chmod -R go-w
 
-reload() {
-  local f
-  f=(~/.zsh-completions/*(.))
-  unfunction $f:t 2> /dev/null
-  autoload -U $f:t
-}
+# reloads the file you're editing
+alias rz='local f; f=(./*(.)); unfunction $f:t 2> /dev/null; autoload -Uz $f:t'
+
+# displays a "header"
+zstyle ':completion:*:descriptions' format '%d'
 
 ```
 
