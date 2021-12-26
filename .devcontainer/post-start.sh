@@ -1,7 +1,7 @@
 #!/bin/bash
 
-echo "post-start start" >> ~/status
+echo "post-start start" >> $HOME/status
 
 # this runs each time the container starts
 
-echo "post-start complete" >> ~/status
+echo "post-start complete" >> $HOME/status

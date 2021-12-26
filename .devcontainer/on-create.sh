@@ -1,7 +1,7 @@
 #!/bin/bash
 
-echo "on-create start" >> ~/status
+echo "on-create start" >> $HOME/status
 
 # add your commands here
 
-echo "on-create complete" >> ~/status
+echo "on-create complete" >> $HOME/status
