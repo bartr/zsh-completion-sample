@@ -36,7 +36,7 @@ compaudit
 compaudit | xargs chmod -R go-w
 
 # reloads the file you're editing
-alias rz='local f; f=(./*(.)); unfunction $f:t 2> /dev/null; autoload -Uz $f:t'
+alias rz='unfunction _bartr; autoload -Uz _bartr'
 
 # displays a "header"
 zstyle ':completion:*:descriptions' format '%d'
