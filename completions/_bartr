@@ -1,8 +1,16 @@
 #compdef _bartr bartr
 
+# main function - called via the compdef definition
+# this handles the top level commands
+# "sub-commands" are handled in different functions
+# this keeps the code clean and makes auto-generation simple
+# some of the functions are short enough to inline
 function _bartr(){
   local line state
 
+  # the first command will parse into "cmds"
+  # sub-commands will parse into "args"
+  # use a case statement to handle
   _arguments \
     '--help[Display help and usage]' \
     '--version[Display version info]' \
@@ -10,6 +18,9 @@ function _bartr(){
     '*::arg:->args'
 
   case $state in
+    # define the top level commands (app, ls, new)
+    # "commands" is a "header" that gets displayed
+    # you can change the value
     cmds)
       _values \
         "commands" \
@@ -18,17 +29,21 @@ function _bartr(){
         "new[Create a new app]"
     ;;
 
+    # call the sub-command functions
+    # the function names use "breadcrumb" naming to avoid collision
     args)
       case $line[1] in
         app)
-          _app
+          _bartr_app
         ;;
+
         new)
-          _new
+          _bartr_new
         ;;
+
+        # no sub-commands
         ls)
           _arguments \
-            '--type+[Type of objects to list]:type:(all pods secrets services)' \
             '--help[Display help and usage]'
           return 0
         ;;
@@ -37,7 +52,9 @@ function _bartr(){
   esac
 }
 
-function _app(){
+# handle the "app" command
+# same structure in all "handlers"
+function _bartr_app(){
   local line state
 
   _arguments \
@@ -46,6 +63,8 @@ function _app(){
     '*::arg:->args'
 
   case $state in
+    # define "sub-commands"
+    # bartr app (create info set)
     cmds)
       _values \
         'application commands' \
@@ -54,25 +73,37 @@ function _app(){
         'set[Set application values]'
     ;;
 
+    # handle the "bartr app" subcommands
     args)
     case $line[1] in
+      # add options to create and set sub-commands
       create|set)
         _arguments \
         '--help[Display help and usage]' \
+        # the + tells completion to expect a parameter
+        # the :App name" is the completion text displayed
         '--app-name+[Application name]:App name:' \
         '--namespace+[Kubernetes namespace]:Namespace:' \
         '--image+[Image name]:Image and tag:' \
+        # the (250m 500m 1000m 2000m) are suggestions you can tab through
+        # you can also enter a number
+        # this is a good prompt to the user for the format of the value
+        # they will be sorted automatically
         '--cpu-limit+[CPU Limit]:CPU Limit:(250m 500m 1000m 2000m)' \
         '--memory-limit+[Memory Limit]:Memory Limit:(256Mi 512Mi 1024Mi 2048Mi)' \
         '--cpu-request+[CPU Request]:CPU Request:(250m 500m 1000m 2000m)' \
         '--memory-request+[Memory Request]:Memory Request:(256Mi 512Mi 1024Mi 2048Mi)' \
         '--readiness-probe+[Readiness Probe path]:Readiness Probe:(/readyz /healthz)' \
+        # chose to add auto-fill as the "default"
         '--liveness-probe+[Liveness Probe path]:Liveness Probe:(/healthz)' \
+        # these are big ranges - some reasonable values
         '--port+[Port app exposes]:Port:(80 8080 8088)' \
         '--node-port+[NodePort for app]:Node Port:(30000 30080 30088 31000 31080 32000 32080)' \
+        # booleans (flags) don't have a +
         '--force[Force overwriting config]'
       ;;
 
+      # every command ends with --help option
       info)
         _arguments \
           '--help[Display help and usage]'
@@ -82,7 +113,7 @@ function _app(){
   esac
 }
 
-function _new(){
+function _bartr_new(){
   local line state
 
   _arguments \
@@ -91,6 +122,8 @@ function _new(){
     '*::arg:->args'
 
   case $state in
+    # define "sub-commands"
+    # bartr new (dotnet spring ts)
     cmds)
       _values \
         'select framework' \
@@ -104,11 +137,12 @@ function _new(){
         daemon|webapi)
           _arguments \
             '--help[Display help and usage]'
-          return 0
         ;;
 
         *)
           case $line[1] in
+            # define "sub-commands"
+            # bartr new (dotnet spring ts) (daemon webapi)
             dotnet|spring|ts)
             _values \
               'select app type' \

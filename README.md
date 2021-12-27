@@ -98,9 +98,21 @@ option
 # this will select --node-port
 # you can select one of the values or enter your own
 
-# you can select other options - some have options, some don't
+# you can select other options - some take parameters, some don't
 
 ```
+
+Check the comments in `completions/_bartr` for some explanation
+
+## Automation
+
+Now that I have a general approach, I can automate the generation of the completion file relatively easily.
+
+Check [here](https://github.com/bartr/system-commandline-sample) for an in-progress example with dotnet System.CommandLine.
+
+## Design
+
+While creating the completion for one of the CLIs I'm working on, I found some design simplifications that would make our CLI more usable. Going forward, it's pretty easy to use System.CommandLine and completions for design reviews of the CLI. The choice of sub-commands, arguments, and options can impact how you write your code and how easy your CLI is to use. Now that I understand completions better (not an expert by any means), my CLIs will be easier to use.
 
 ## Links
 
