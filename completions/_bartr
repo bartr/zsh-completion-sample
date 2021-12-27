@@ -56,7 +56,7 @@ function _app(){
 
     args)
     case $line[1] in
-      create)
+      create|set)
         _arguments \
         '--help[Display help and usage]' \
         '--app-name+[Application name]:App name:' \
@@ -66,28 +66,11 @@ function _app(){
         '--memory-limit+[Memory Limit]:Memory Limit:(256Mi 512Mi 1024Mi 2048Mi)' \
         '--cpu-request+[CPU Request]:CPU Request:(250m 500m 1000m 2000m)' \
         '--memory-request+[Memory Request]:Memory Request:(256Mi 512Mi 1024Mi 2048Mi)' \
-        '--readiness-probe+[Readiness Probe path]:Readiness Probe:(/readyz)' \
+        '--readiness-probe+[Readiness Probe path]:Readiness Probe:(/readyz /healthz)' \
         '--liveness-probe+[Liveness Probe path]:Liveness Probe:(/healthz)' \
-        '--port+[Port app exposes]:Port:(8080)' \
-        '--node-port+[NodePort for app]:Node Port:(30080)' \
+        '--port+[Port app exposes]:Port:(80 8080 8088)' \
+        '--node-port+[NodePort for app]:Node Port:(30000 30080 30088 31000 31080 32000 32080)' \
         '--force[Force overwriting config]'
-      ;;
-
-      set)
-        _values \
-          'key to set' \
-          'AppName[Application name]' \
-          'Namespace[Kubernetes namespace]' \
-          'Args[Application arguments]' \
-          'Image[Docker image:tag]' \
-          'Port[Service Port]' \
-          'NodePort[Node Port]' \
-          'CpuLimit[CPU Limit]' \
-          'CpuRequest[Requested CPU]' \
-          'MemoryLimit[Memory Limit]' \
-          'MemoryRequest[Requested Memor]' \
-          'LivenessProbe[Liveness probe (default /healthz)]' \
-          'ReadinessProbe[Readiness probe (default /readyz)]'
       ;;
 
       info)
