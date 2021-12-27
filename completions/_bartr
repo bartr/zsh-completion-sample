@@ -3,7 +3,7 @@
 function _bartr(){
   local line state
 
-  _arguments -C \
+  _arguments \
     '--help[Display help and usage]' \
     '--version[Display version info]' \
     '1: :->cmds' \
@@ -12,7 +12,7 @@ function _bartr(){
   case $state in
     cmds)
       _values \
-        "bartr commands" \
+        "commands" \
         "app[App commands]" \
         "ls[List the apps]" \
         "new[Create a new app]"
@@ -28,7 +28,9 @@ function _bartr(){
         ;;
         ls)
           _arguments \
+            '--type+[Type of objects to list]:type:(all pods secrets services)' \
             '--help[Display help and usage]'
+          return 0
         ;;
       esac
     ;;
@@ -57,18 +59,17 @@ function _app(){
       create)
         _arguments \
         '--help[Display help and usage]' \
-        '--app-name=[Application name]' \
-        '--namespace=[Kubernetes namespace]' \
-        '--image=[Image name]' \
-        '--cpu-limit=[CPU Limit (default: 250m)]' \
-        '--memory-limit=[Memory Limit (default: 256Mi)]' \
-        '--cpu-request=[CPU Request (default: 250m)]' \
-        '--memory-request=[Memory Request (default: 256Mi)]' \
-        '--args=[Application arguments]' \
-        '--readiness-probe=[Readiness Probe path (default: /healthz)]' \
-        '--liveness-probe=[Liveness Probe path (default: /healthz)]' \
-        '--port=[Port app exposes (default: 8080)]' \
-        '--node-port=[NodePort for app (default: 30080)]' \
+        '--app-name+[Application name]:App name:' \
+        '--namespace+[Kubernetes namespace]:Namespace:' \
+        '--image+[Image name]:Image and tag:' \
+        '--cpu-limit+[CPU Limit]:CPU Limit:(250m 500m 1000m 2000m)' \
+        '--memory-limit+[Memory Limit]:Memory Limit:(256Mi 512Mi 1024Mi 2048Mi)' \
+        '--cpu-request+[CPU Request]:CPU Request:(250m 500m 1000m 2000m)' \
+        '--memory-request+[Memory Request]:Memory Request:(256Mi 512Mi 1024Mi 2048Mi)' \
+        '--readiness-probe+[Readiness Probe path]:Readiness Probe:(/readyz)' \
+        '--liveness-probe+[Liveness Probe path]:Liveness Probe:(/healthz)' \
+        '--port+[Port app exposes]:Port:(8080)' \
+        '--node-port+[NodePort for app]:Node Port:(30080)' \
         '--force[Force overwriting config]'
       ;;
 
@@ -119,8 +120,8 @@ function _new(){
       case $line[2] in
         daemon|webapi)
           _arguments \
-            '--help[Display help and usage]' \
-          '1::(new)'
+            '--help[Display help and usage]'
+          return 0
         ;;
 
         *)
