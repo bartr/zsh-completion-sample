@@ -11,6 +11,8 @@ function _bartr(){
   # the first command will parse into "cmds"
   # sub-commands will parse into "args"
   # use a case statement to handle
+  # every command has --help option
+  # first command has --version option
   _arguments \
     '--help[Display help and usage]' \
     '--version[Display version info]' \
@@ -42,6 +44,7 @@ function _bartr(){
         ;;
 
         # no sub-commands
+        # every command ends with --help option
         ls)
           _arguments \
             '--help[Display help and usage]'
@@ -80,30 +83,20 @@ function _bartr_app(){
       create|set)
         _arguments \
         '--help[Display help and usage]' \
-        # the + tells completion to expect a parameter
-        # the :App name" is the completion text displayed
         '--app-name+[Application name]:App name:' \
         '--namespace+[Kubernetes namespace]:Namespace:' \
         '--image+[Image name]:Image and tag:' \
-        # the (250m 500m 1000m 2000m) are suggestions you can tab through
-        # you can also enter a number
-        # this is a good prompt to the user for the format of the value
-        # they will be sorted automatically
         '--cpu-limit+[CPU Limit]:CPU Limit:(250m 500m 1000m 2000m)' \
         '--memory-limit+[Memory Limit]:Memory Limit:(256Mi 512Mi 1024Mi 2048Mi)' \
         '--cpu-request+[CPU Request]:CPU Request:(250m 500m 1000m 2000m)' \
         '--memory-request+[Memory Request]:Memory Request:(256Mi 512Mi 1024Mi 2048Mi)' \
         '--readiness-probe+[Readiness Probe path]:Readiness Probe:(/readyz /healthz)' \
-        # chose to add auto-fill as the "default"
         '--liveness-probe+[Liveness Probe path]:Liveness Probe:(/healthz)' \
-        # these are big ranges - some reasonable values
         '--port+[Port app exposes]:Port:(80 8080 8088)' \
         '--node-port+[NodePort for app]:Node Port:(30000 30080 30088 31000 31080 32000 32080)' \
-        # booleans (flags) don't have a +
         '--force[Force overwriting config]'
       ;;
 
-      # every command ends with --help option
       info)
         _arguments \
           '--help[Display help and usage]'
